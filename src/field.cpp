@@ -1,4 +1,4 @@
-#include "Snake.h"
+#include "snake.h"
 
 extern int _MAX_LEN;
 extern Food _food;
