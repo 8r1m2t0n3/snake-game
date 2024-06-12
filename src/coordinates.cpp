@@ -1,4 +1,4 @@
-#include "Snake.h"
+#include "snake.h"
 
 Coordinates::Coordinates() {
 	x = 0;

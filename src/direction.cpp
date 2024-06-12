@@ -1,4 +1,4 @@
-#include "Snake.h"
+#include "snake.h"
 
 void Direction::set_direction(int dir) {
 	direction = dir;
