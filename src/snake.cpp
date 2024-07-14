@@ -1,12 +1,10 @@
 #include "snake.h"
 
-extern int _MAX_LEN;
 extern Field _field;
 extern int _X, _Y;
 
 Snake::Snake() {
-	_MAX_LEN = DEFAULT_LEN - 1;
-	length = 0;
+	actual_length = DEFAULT_LEN - 1;
 	head.set_coordinates(_X / 2 + _X / 2 % 2, _Y / 2 + _Y / 2 % 2);
 	head.set_direction(RIGHT);
 }
@@ -44,9 +42,8 @@ Coordinates Snake::get_head_coordinates() {
 
 void Snake::move() {
 	head.check_diraction();
-	int dir = head.get_direction();
 
-	switch (dir) {
+	switch (head.get_direction()) {
 	case UP:
 		head.set_coordinates(head.get_x(), head.get_y() - 1);
 		break;
@@ -62,7 +59,6 @@ void Snake::move() {
 	default:
 		return;
 	}
-	length++;
 }
 
 bool Snake::is_time_to_die() {
@@ -70,7 +66,7 @@ bool Snake::is_time_to_die() {
 	int head_y = head.get_y();
 	if (head_x < 3 || head_x > _X - 4 || head_y < 4 || head_y > _Y - 3)
 		return 1;
-	for (int i = 0; i < get_length(); i++) {
+	for (int i = 0; i < body.size(); i++) {
 		Coordinates coord = get_index_body_segment(i);
 		if (coord.get_x() == head.get_x() && coord.get_y() == head.get_y()) {
 			return 1;
@@ -83,22 +79,25 @@ int Snake::get_head_diraction() {
 	return head.get_direction();
 }
 
-int Snake::get_length() {
+int Snake::get_displayed_length() {
 	return body.size();
 }
 
-void Snake::set_length(int length) {
-	this->length = length;
+int Snake::get_actual_length() {
+	return actual_length;
+}
+
+void Snake::set_actual_length(int new_actual_length) {
+	actual_length = new_actual_length;
 }
 
 void Snake::add_body_segment(Coordinates coord) {
 	body.push(coord);
 }
 
-Coordinates Snake::get_and_del_last_body_segment() {
+Coordinates Snake::del_and_get_last_body_segment() {
 	Coordinates coord = body.front();
 	body.pop();
-	length--;
 	return coord;
 }
 

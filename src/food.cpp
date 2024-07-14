@@ -1,7 +1,6 @@
 #include "snake.h"
 
 extern Score _score;
-extern int _MAX_LEN;
 extern Snake _snake;
 extern int _X, _Y;
 
@@ -23,7 +22,7 @@ bool Food::is_eaten() {
 	Coordinates food_coord = get_coordinates();
 	if (snake_coord.get_x() == food_coord.get_x() && 
 		snake_coord.get_y() == food_coord.get_y()) {
-		_MAX_LEN++;
+		_snake.set_actual_length(_snake.get_actual_length() + 1);
 		_score.set_score(_score.get_score() + 1);
 		return 1;
 	}

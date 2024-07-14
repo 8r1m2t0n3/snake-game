@@ -1,6 +1,5 @@
 #include "snake.h"
 
-extern int _MAX_LEN;
 extern Food _food;
 extern Snake _snake;
 extern Score _score;
@@ -99,7 +98,7 @@ void Field::place_char(Coordinates coord, char chr) {
 Food Field::replace_food() {
 TryAgain:
 	Food new_food;
-	for (int i = 0; i < _snake.get_length(); i++) {
+	for (int i = 0; i < _snake.get_displayed_length(); i++) {
 		Coordinates segment_coord = _snake.get_index_body_segment(i);
 		if (segment_coord == new_food.get_coordinates())
 			goto TryAgain;
@@ -149,8 +148,8 @@ void Field::change_snake_position(Snake& snake) {
 	set_cursor_coordinates(segment_coord);
 	std::cout << '*';
 
-	if (snake.get_length() > _MAX_LEN + 1) {
-		set_cursor_coordinates(snake.get_and_del_last_body_segment());
+	if (snake.get_displayed_length() > snake.get_actual_length() + 1) {
+		set_cursor_coordinates(snake.del_and_get_last_body_segment());
 		std::cout << ' ';
 	}
 }
@@ -170,7 +169,7 @@ void Field::update_score() {
 }
 
 void Field::kill_snake(Snake& snake) {
-	int len = snake.get_length();
+	int len = snake.get_displayed_length();
 	for (int i = 0; i < len; i++) {
 		Coordinates coord = snake.get_index_body_segment(i);
 		set_cursor_coordinates(coord);

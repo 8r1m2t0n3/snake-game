@@ -1,24 +1,11 @@
 #include "Snake.h"
 
-int _MAX_LEN;
 Field _field(SMALL);
 Snake _snake;
 Food _food;
 Score _score;
 
-void test() {
-	_field.build_Field();
-	while (1) {
-		//_field.deley(50);
-		_food = _field.replace_food();
-		_field.place_food(_food);
-	}
-}
-
 int main() {
-	//test();
-
-
 	_field.build_Field();
 	_field.place_snake(_snake);
 	while (1) {

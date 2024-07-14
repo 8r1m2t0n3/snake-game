@@ -62,17 +62,18 @@ class Snake {
 private:
 	Head head;
 	std::queue<Coordinates> body;
-	int length;
+	int actual_length;
 public:
 	Snake();
 	Coordinates get_head_coordinates();
 	int get_head_diraction();
-	int get_length();
-	void set_length(int length);
+	int get_displayed_length();
+	int get_actual_length();
+	void set_actual_length(int new_actual_length);
 	void move();
 	bool is_time_to_die();
 	void add_body_segment(Coordinates coord);
-	Coordinates get_and_del_last_body_segment();
+	Coordinates del_and_get_last_body_segment();
 	Coordinates get_index_body_segment(int ind);
 };
 
