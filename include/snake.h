@@ -6,7 +6,6 @@
 #include <iostream>
 #include <queue>
 #include <string>
-using namespace std;
 
 /* -------- CHANGEABLE -------- */
 #define DEFAULT_LEN 4
@@ -14,7 +13,7 @@ using namespace std;
 #define WEDGE_HEAD 1 // 0 or 1
 /* ---------------------------- */
 
-/* --------- CONSTANT --------- */
+/* --------- CONSTANTS --------- */
 #define UP VK_UP
 #define DOWN VK_DOWN
 #define LEFT VK_LEFT
@@ -62,7 +61,7 @@ public:
 class Snake {
 private:
 	Head head;
-	queue<Coordinates> body;
+	std::queue<Coordinates> body;
 	int length;
 public:
 	Snake();
