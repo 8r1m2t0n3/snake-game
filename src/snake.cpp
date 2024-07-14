@@ -107,7 +107,7 @@ Coordinates Snake::get_index_body_segment(int ind) {
 		Coordinates coord(0, 0);
 		return coord;
 	}
-	queue<Coordinates> body_clone = body;
+	std::queue<Coordinates> body_clone = body;
 	while (ind != 0) {
 		body_clone.pop();
 		ind--;
