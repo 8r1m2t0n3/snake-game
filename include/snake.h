@@ -9,7 +9,7 @@
 
 /* -------- CHANGEABLE -------- */
 #define DEFAULT_LEN 4
-#define WEDGE_HEAD 0 // 0 or 1
+#define WEDGE_HEAD 1 // 0 or 1
 /* ---------------------------- */
 
 /* --------- CONSTANTS --------- */
