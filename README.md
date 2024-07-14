@@ -1,1 +1,1 @@
-Run runcmake.bat from ..\Snake_Game directory to build project.
+Run runcmake.bat from ..\snake-game directory to build project.
