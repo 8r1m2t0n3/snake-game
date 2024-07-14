@@ -1,29 +1,24 @@
 #include "snake.h"
 
-extern Food _food;
-extern Snake _snake;
-extern Score _score;
-
-int _X, _Y;
-
-Field::Field(int psize) {
+Field::Field(FIELD_SIZE field_size) {
 	std::pair<int, int> size;
-	switch (psize) {
-	case SMALL:
-		size.first = 33;
-		size.second = 17;
-		break;
-	case MEDIUM:
-		size.first = 47;
-		size.second = 23;
-		break;
-	case BIG:
-		size.first = 61;
-		size.second = 30;
-		break;
-	default:
-		break;
+	switch (field_size) {
+		case SMALL:
+			size.first = 29;
+			size.second = 15;
+			break;
+		case NORMAL:
+			size.first = 33;
+			size.second = 17;
+			break;
+		case LARGE:
+			size.first = 47;
+			size.second = 23;
+			break;
+		default:
+			break;
 	}
+	
 	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO cursorInfo;
 	GetConsoleCursorInfo(out, &cursorInfo);
@@ -36,21 +31,25 @@ Field::Field(int psize) {
 	screen += std::to_string(size.second);
 
 	system(screen.c_str());
-	_X = size.first;
-	_Y = size.second;
+
+	this->field_size = size;
+
+	this->score = Score();
+	this->snake = Snake();
+	this->food = Food();
 }
 
-void Field::build_Field() {
-	for (int x = 2; x < _X - 2; x += 2) {
+void Field::display_field() {
+	for (int x = 2; x < field_size.first - 2; x += 2) {
 		set_cursor_coordinates(x, 3);
 		std::cout << '#';
-		set_cursor_coordinates(x, _Y - 2);
+		set_cursor_coordinates(x, field_size.second - 2);
 		std::cout << '#';
 	}
-	for (int y = 1; y < _Y - 4; y++) {
+	for (int y = 1; y < field_size.second - 4; y++) {
 		set_cursor_coordinates(2, y + 2);
 		std::cout << '#';
-		set_cursor_coordinates(_X - 3, y + 2);
+		set_cursor_coordinates(field_size.first - 3, y + 2);
 		std::cout << '#';
 	}
 
@@ -58,14 +57,42 @@ void Field::build_Field() {
 	std::cout << "SCORE:000";
 }
 
-void Field::place_food(Food food) {
+void Field::place_food_in_random_place() {
+TryAgain:
+	int x = INDENT;
+	x += rand() * time(0) % (static_cast<__int64>(field_size.first) - 8);
+	if (x % 2 == 1) x -= 1;
+	int y = INDENT;
+	y += rand() * time(0) % (static_cast<__int64>(field_size.second) - 6);
+
+	for (int i = 0; i < snake.get_displayed_length(); i++) {
+		Coordinates segment_coord = snake.get_index_body_segment(i);
+		if (segment_coord.get_x() == x && segment_coord.get_y() == y)
+			goto TryAgain;
+	}
+
+	food.set_coordinates(x, y);
+
 	set_cursor_coordinates(food.get_coordinates());
+
 	std::cout << "F";
 }
 
-void Field::clear_Field() {
-	for (int i = 0; i < _X; i++) {
-		for (int j = 0; j < _Y; j++) {
+bool Field::is_food_eaten() {
+	Coordinates snake_coord = snake.get_head_coordinates();
+	Coordinates food_coord = food.get_coordinates();
+	if (snake_coord.get_x() == food_coord.get_x() && 
+		snake_coord.get_y() == food_coord.get_y()) {
+		snake.set_actual_length(snake.get_actual_length() + 1);
+		score.set_value(score.get_value() + 1);
+		return 1;
+	}
+	return 0;
+}
+
+void Field::clear_field() {
+	for (int i = 0; i < field_size.first; i++) {
+		for (int j = 0; j < field_size.second; j++) {
 			set_cursor_coordinates(i, j);
 			std::cout << ' ';
 		}
@@ -95,23 +122,28 @@ void Field::place_char(Coordinates coord, char chr) {
 	std::cout << chr;
 }
 
-Food Field::replace_food() {
-TryAgain:
-	Food new_food;
-	for (int i = 0; i < _snake.get_displayed_length(); i++) {
-		Coordinates segment_coord = _snake.get_index_body_segment(i);
-		if (segment_coord == new_food.get_coordinates())
-			goto TryAgain;
-	}
-	return new_food;
-}
-
-void Field::place_snake(Snake& snake) {
+void Field::place_snake() {
+	snake.set_head_coordinates(
+		field_size.first / 4 + field_size.first / 4 % 2, 
+		field_size.second / 2 + field_size.second / 2 % 2);
 	Coordinates coord(snake.get_head_coordinates());
 	set_cursor_coordinates(coord);
+
+	for(int i = 0; i < 4; i++) {
+		set_cursor_coordinates(coord);
+		std::cout << ' ';
+		deley(400);
+		set_cursor_coordinates(coord);
+	#if WEDGE_HEAD == 1
+		std::cout << '>';
+	#else 
+		std::cout << '*';	
+	#endif
+		deley(400);
+	}
 }
 
-void Field::change_snake_position(Snake& snake) {
+void Field::change_snake_position() {
 	Coordinates coord(snake.get_head_coordinates());
 	int dir = snake.get_head_diraction();
 	set_cursor_coordinates(coord);
@@ -136,7 +168,7 @@ void Field::change_snake_position(Snake& snake) {
 		segment_coord.set_coordinates(coord.get_x() - 2, coord.get_y());
 	}
 #else
-	cout << '*';
+	std::cout << '*';
 	if (dir == UP) segment_coord.set_coordinates(coord.get_x(), coord.get_y() + 1);
 	else if (dir == DOWN) segment_coord.set_coordinates(coord.get_x(), coord.get_y() - 1);
 	else if (dir == LEFT) segment_coord.set_coordinates(coord.get_x() + 2, coord.get_y());
@@ -155,7 +187,7 @@ void Field::change_snake_position(Snake& snake) {
 }
 
 void Field::update_score() {
-	int score = _score.get_score();
+	int score = this->score.get_value();
 	set_cursor_coordinates(8, 1);
 	if (score < 10) {
 		std::cout << "00" << score;
@@ -168,7 +200,7 @@ void Field::update_score() {
 	}
 }
 
-void Field::kill_snake(Snake& snake) {
+void Field::kill_snake() {
 	int len = snake.get_displayed_length();
 	for (int i = 0; i < len; i++) {
 		Coordinates coord = snake.get_index_body_segment(i);
@@ -178,10 +210,50 @@ void Field::kill_snake(Snake& snake) {
 	}
 }
 
+bool Field::is_time_to_kill_snake() {
+	Coordinates head_coord = snake.get_head_coordinates();
+	if (head_coord.get_x() < 3 || head_coord.get_x() > field_size.first - 4 || head_coord.get_y() < 4 || head_coord.get_y() > field_size.second - 3)
+		return 1;
+	for (int i = 0; i < snake.get_displayed_length(); i++) {
+		Coordinates coord = snake.get_index_body_segment(i);
+		if (coord.get_x() == head_coord.get_x() && coord.get_y() == head_coord.get_y()) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
 void Field::the_end() {
-	clear_Field();
-	set_cursor_coordinates((_X - 7) / 2, _Y / 2);
+	clear_field();
+	set_cursor_coordinates((field_size.first - 7) / 2, field_size.second / 2);
 	std::cout << "THE END";
 	char chr = _getch();
 	chr = _getch();
+}
+
+void Field::clean_input() {
+	GetAsyncKeyState(UP);
+	GetAsyncKeyState(DOWN);
+	GetAsyncKeyState(LEFT);
+	GetAsyncKeyState(RIGHT);
+}
+
+void Field::start_game() {
+	clean_input();
+	display_field();
+	place_food_in_random_place();
+	place_snake();
+	while (1) {
+		snake.move_in_head_direction();
+		if (is_time_to_kill_snake()) {
+			kill_snake();
+			the_end();
+			return;
+		}
+		change_snake_position();
+		deley(150);
+		if (is_food_eaten())
+			place_food_in_random_place();
+		update_score();
+	}
 }

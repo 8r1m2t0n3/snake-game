@@ -12,7 +12,6 @@ set(SOURCES
     src/coordinates.cpp
     src/direction.cpp
     src/field.cpp
-    src/food.cpp
     src/snake.cpp
 )
 

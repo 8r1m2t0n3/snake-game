@@ -1,6 +1,6 @@
 #include "snake.h"
 
-void Direction::set_direction(int dir) {
+void Direction::set_direction(DIRECTION dir) {
 	direction = dir;
 }
 
