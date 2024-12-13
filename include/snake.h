@@ -9,31 +9,28 @@
 
 /* -------- CHANGEABLE -------- */
 #define DEFAULT_LEN 4
+
 #define WEDGE_HEAD 1 // 0 or 1
 /* ---------------------------- */
 
 /* --------- CONSTANTS --------- */
+#define UP VK_UP
+#define DOWN VK_DOWN
+#define LEFT VK_LEFT
+#define RIGHT VK_RIGHT
+
+#define SMALL 0
+#define MEDIUM 1
+#define BIG 2
+
 #define INDENT 4
 /* ---------------------------- */
 
-enum FIELD_SIZE { 
-	SMALL = 0, 
-	NORMAL, 
-	LARGE 
-};
-
-enum DIRECTION {
-	UP = VK_UP,
-	DOWN = VK_DOWN,
-	LEFT = VK_LEFT,
-	RIGHT = VK_RIGHT
-};
-
 class Direction {
 private:
-	DIRECTION direction;
+	int direction;
 public:
-	void set_direction(DIRECTION dir);
+	void set_direction(int dir);
 	int get_direction();
 };
 
@@ -58,50 +55,47 @@ class Head : public Coordinates, public Direction {
 public:
 	Head();
 	Head(int x, int y);
-	void check_direction();
+	void check_diraction();
 };
 
 class Snake {
 private:
 	Head head;
 	std::queue<Coordinates> body;
-	int actual_length;
+	int length;
 public:
 	Snake();
-	void set_head_coordinates(int x, int y);
-	void set_head_direction(DIRECTION dir);
 	Coordinates get_head_coordinates();
 	int get_head_diraction();
-	int get_displayed_length();
-	int get_actual_length();
-	void set_actual_length(int new_actual_length);
-	void move_in_head_direction();
+	int get_length();
+	void set_length(int length);
+	void move();
+	bool is_time_to_die();
 	void add_body_segment(Coordinates coord);
-	Coordinates del_and_get_last_body_segment();
-	Coordinates get_index_body_segment(int index);
+	Coordinates get_and_del_last_body_segment();
+	Coordinates get_index_body_segment(int ind);
 };
 
 class Score {
 private:
-	int value;
+	int score;
 public:
 	Score() {
-		value = 0;
+		score = 0;
 	}
-	int get_value() {
-		return value;
+	int get_score() {
+		return score;
 	}
-	void set_value(int value) {
-		this->value = value;
+	void set_score(int score) {
+		this->score = score;
 	}
 };
 
 class Food : public Coordinates {
 public:
-	Food::Food() = default;
-	Food::Food(int x, int y) {
-		set_coordinates(x, y);
-	}
+	Food();
+	Food(int x, int y);
+	bool is_eaten();
 };
 
 class Field {
@@ -109,24 +103,19 @@ private:
 	Score score;
 	Snake snake;
 	Food food;
-	std::pair<int, int> field_size;
 public:
-	Field(FIELD_SIZE field_size);
-	void start_game();
-private:
-	void clean_input();
-	void display_field();
-	void clear_field();
-	void place_food_in_random_place();
-	bool is_food_eaten();
-	bool is_time_to_kill_snake();
+	Field(int psize);
+	void build_Field();
+	void clear_Field();
+	void place_food(Food food);
+	Food replace_food();
 	void place_char(Coordinates coord, char chr);
 	void deley(int time);
 	void set_cursor_coordinates(Coordinates coordinates);
 	void set_cursor_coordinates(int x, int y);
-	void place_snake();
-	void change_snake_position();
+	void place_snake(Snake& snake);
+	void change_snake_position(Snake& snake);
 	void update_score();
-	void kill_snake();
+	void kill_snake(Snake& snake);
 	void the_end();
 };
