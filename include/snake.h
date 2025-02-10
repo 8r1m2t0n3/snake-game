@@ -1,11 +1,10 @@
 #include <iostream>
-#include <windows.h>
 #include <random>
 #include <time.h>
-#include <conio.h>
 #include <iostream>
 #include <queue>
 #include <string>
+#include "console_handler.h"
 
 /* -------- CHANGEABLE -------- */
 #define DEFAULT_LEN 4
@@ -22,12 +21,25 @@ enum FIELD_SIZE {
 	LARGE 
 };
 
+#ifdef _WIN32
+
 enum DIRECTION {
 	UP = VK_UP,
 	DOWN = VK_DOWN,
 	LEFT = VK_LEFT,
 	RIGHT = VK_RIGHT
 };
+
+#elif __linux__
+
+enum DIRECTION {
+	UP = 65,
+	DOWN = 66,
+	LEFT = 68,
+	RIGHT = 67
+};
+
+#endif
 
 class Direction {
 private:
@@ -98,8 +110,8 @@ public:
 
 class Food : public Coordinates {
 public:
-	Food::Food() = default;
-	Food::Food(int x, int y) {
+	Food() = default;
+	Food(int x, int y) {
 		set_coordinates(x, y);
 	}
 };
@@ -121,7 +133,7 @@ private:
 	bool is_food_eaten();
 	bool is_time_to_kill_snake();
 	void place_char(Coordinates coord, char chr);
-	void deley(int time);
+	void delay(int time);
 	void set_cursor_coordinates(Coordinates coordinates);
 	void set_cursor_coordinates(int x, int y);
 	void place_snake();

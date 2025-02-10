@@ -18,12 +18,6 @@ Field::Field(FIELD_SIZE field_size) {
 		default:
 			break;
 	}
-	
-	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
-	CONSOLE_CURSOR_INFO cursorInfo;
-	GetConsoleCursorInfo(out, &cursorInfo);
-	cursorInfo.bVisible = 0;
-	SetConsoleCursorInfo(out, &cursorInfo);
 
 	std::string screen("mode con cols=");
 	screen += std::to_string(size.first);
@@ -60,10 +54,10 @@ void Field::display_field() {
 void Field::place_food_in_random_place() {
 TryAgain:
 	int x = INDENT;
-	x += rand() * time(0) % (static_cast<__int64>(field_size.first) - 8);
+	x += rand() * time(0) % (static_cast<__int64_t>(field_size.first) - 8);
 	if (x % 2 == 1) x -= 1;
 	int y = INDENT;
-	y += rand() * time(0) % (static_cast<__int64>(field_size.second) - 6);
+	y += rand() * time(0) % (static_cast<__int64_t>(field_size.second) - 6);
 
 	for (int i = 0; i < snake.get_displayed_length(); i++) {
 		Coordinates segment_coord = snake.get_index_body_segment(i);
@@ -99,26 +93,20 @@ void Field::clear_field() {
 	}
 }
 
-void Field::deley(int time) {
-	Sleep(time);
+void Field::delay(int time) {
+	Delay(time);
 }
 
-void Field::set_cursor_coordinates(Coordinates coordinates) {
-	COORD coord;
-	coord.X = coordinates.get_x();
-	coord.Y = coordinates.get_y();
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+void Field::set_cursor_coordinates(Coordinates coord) {
+	SetCursorPosition(coord.get_x(), coord.get_y());
 }
 
 void Field::set_cursor_coordinates(int x, int y) {
-	COORD coord;
-	coord.X = x;
-	coord.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+	SetCursorPosition(x, y);
 }
 
 void Field::place_char(Coordinates coord, char chr) {
-	set_cursor_coordinates(coord);
+	set_cursor_coordinates(coord.get_x(), coord.get_y());
 	std::cout << chr;
 }
 
@@ -132,14 +120,14 @@ void Field::place_snake() {
 	for(int i = 0; i < 4; i++) {
 		set_cursor_coordinates(coord);
 		std::cout << ' ';
-		deley(400);
+		delay(400);
 		set_cursor_coordinates(coord);
 	#if WEDGE_HEAD == 1
 		std::cout << '>';
 	#else 
 		std::cout << '*';	
 	#endif
-		deley(400);
+		delay(400);
 	}
 }
 
@@ -206,7 +194,7 @@ void Field::kill_snake() {
 		Coordinates coord = snake.get_index_body_segment(i);
 		set_cursor_coordinates(coord);
 		std::cout << ' ';
-		deley(100);
+		delay(100);
 	}
 }
 
@@ -227,18 +215,16 @@ void Field::the_end() {
 	clear_field();
 	set_cursor_coordinates((field_size.first - 7) / 2, field_size.second / 2);
 	std::cout << "THE END";
-	char chr = _getch();
-	chr = _getch();
 }
 
 void Field::clean_input() {
-	GetAsyncKeyState(UP);
-	GetAsyncKeyState(DOWN);
-	GetAsyncKeyState(LEFT);
-	GetAsyncKeyState(RIGHT);
+	ClearConsole();
 }
 
 void Field::start_game() {
+	EnableNonBlockingInput();
+	RemoveCursoreFromScreen();
+
 	clean_input();
 	display_field();
 	place_food_in_random_place();
@@ -248,10 +234,14 @@ void Field::start_game() {
 		if (is_time_to_kill_snake()) {
 			kill_snake();
 			the_end();
+			DisableNonBlockingInput();
+			ShowCursor();
+			delay(500);
+			clean_input();
 			return;
 		}
 		change_snake_position();
-		deley(150);
+		delay(150);
 		if (is_food_eaten())
 			place_food_in_random_place();
 		update_score();

@@ -24,18 +24,18 @@ Head::Head(int x, int y) {
 
 void Head::check_direction() {
 	int dir = get_direction();
+	int pressedKey = GetPressedKey();
 
-
-	if (GetAsyncKeyState(RIGHT) && dir != LEFT) {
+	if (pressedKey == RIGHT && dir != LEFT) {
 		set_direction(RIGHT);
 	}
-	else if (GetAsyncKeyState(UP) && dir != DOWN) {
+	else if (pressedKey == UP && dir != DOWN) {
 		set_direction(UP);
 	}
-	else if (GetAsyncKeyState(DOWN) && dir != UP) {
+	else if (pressedKey == DOWN && dir != UP) {
 		set_direction(DOWN);
 	}
-	else if (GetAsyncKeyState(LEFT) && dir != RIGHT) {
+	else if (pressedKey == LEFT && dir != RIGHT) {
 		set_direction(LEFT);
 	}
 }
