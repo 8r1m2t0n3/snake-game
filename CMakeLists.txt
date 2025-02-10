@@ -11,6 +11,7 @@ set(SOURCES
     main.cpp
     src/coordinates.cpp
     src/direction.cpp
+    src/console_handler.cpp
     src/field.cpp
     src/snake.cpp
 )
