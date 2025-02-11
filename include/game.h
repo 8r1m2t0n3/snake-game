@@ -116,27 +116,42 @@ public:
 	}
 };
 
-class Field {
+class Window {
 private:
+	std::pair<int, int> size;
+public:
+	Window() = default;
+	Window(std::pair<int, int> size);
+	std::pair<int, int> getSize();
+	void moveCursor(Coordinates coord);
+	void moveCursor(int x, int y);
+	void displayCharacter(Coordinates coord, char chr);
+	void displayString(Coordinates coord, std::string str);
+	void delay(int time);
+	void clearScreen();
+	void enableNonBlockingInput();
+	void disableNonBlockingInput();
+	void hideCursore();
+	void showCursor();
+};
+
+class Game {
+private:
+	Window window;
 	Score score;
 	Snake snake;
 	Food food;
-	std::pair<int, int> fieldSize;
 public:
-	Field(FIELD_SIZE fieldSize);
-	void startGame();
-private:
-	void clearScreen();
-	void clearField();
+	Game(FIELD_SIZE fieldSize);
 	void displayField();
 	void placeFoodRandomly();
 	bool isFoodEaten();
-	bool isSnakeKilled();
-	void placeCharacter(Coordinates coord, char chr);
-	void delay(int time);
-	void placeSnake();
+	void clearField();
+	void playSnakeAppearanceAnimation();
 	void displaySnake();
-	void updateScore();
+	void displayScore();
+	bool isSnakeCollidingWithObstacle();
 	void killSnake();
-	void theEnd();
+	void displayGameEndLabel();
+	void start();
 };

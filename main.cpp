@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 				return -1;
 		}
 	} 
-	Field field(fieldSize);
-	field.startGame();
+	Game game(fieldSize);
+	game.start();
 	return 0;
 }

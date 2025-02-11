@@ -7,13 +7,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 include_directories(include)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 set(SOURCES
     main.cpp
     src/coordinates.cpp
     src/direction.cpp
     src/console_handler.cpp
-    src/field.cpp
+    src/window.cpp
     src/snake.cpp
+    src/game.cpp
 )
 
 add_executable(snake_game ${SOURCES})
