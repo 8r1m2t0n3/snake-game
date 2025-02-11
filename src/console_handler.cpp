@@ -32,15 +32,15 @@ void RemoveCursoreFromScreen() {
 }
 
 void ShowCursor() {
-    // do not need for windows
+    // implementation does not required for windows
 }
 
 void EnableNonBlockingInput() {
-    // do not need for windows
+    // implementation does not required for windows
 }
 
 void DisableNonBlockingInput() {
-    // do not need for windows
+    // implementation does not required for windows
 }
 
 #elif __linux__
