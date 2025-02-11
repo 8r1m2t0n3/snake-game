@@ -45,8 +45,8 @@ class Direction {
 private:
 	DIRECTION direction;
 public:
-	void set_direction(DIRECTION dir);
-	int get_direction();
+	void setDirection(DIRECTION dir);
+	int getDirection();
 };
 
 class Coordinates {
@@ -57,40 +57,40 @@ public:
 	Coordinates();
 	Coordinates(int x, int y);
 	bool operator==(Coordinates coord);
-	Coordinates get_coordinates();
-	int get_x();
-	int get_y();
-	void set_coordinates(Coordinates coord);
-	void set_coordinates(int x, int y);
-	void set_x(int val);
-	void set_y(int val);
+	Coordinates getCoordinates();
+	int getX();
+	int getY();
+	void setX(int x);
+	void setY(int y);
+	void setCoordinates(Coordinates coord);
+	void setCoordinates(int x, int y);
 };
 
 class Head : public Coordinates, public Direction {
 public:
 	Head();
 	Head(int x, int y);
-	void check_direction();
+	void checkDirection();
 };
 
 class Snake {
 private:
 	Head head;
 	std::queue<Coordinates> body;
-	int actual_length;
+	int actualLength;
 public:
 	Snake();
-	void set_head_coordinates(int x, int y);
-	void set_head_direction(DIRECTION dir);
-	Coordinates get_head_coordinates();
-	int get_head_diraction();
-	int get_displayed_length();
-	int get_actual_length();
-	void set_actual_length(int new_actual_length);
-	void move_in_head_direction();
-	void add_body_segment(Coordinates coord);
-	Coordinates del_and_get_last_body_segment();
-	Coordinates get_index_body_segment(int index);
+	void setHeadCoordinates(int x, int y);
+	void setHeadDirection(DIRECTION dir);
+	Coordinates getHeadCoordinates();
+	int getHeadDiraction();
+	int getDisplayedLength();
+	int getActualLength();
+	void setActualLength(int new_actual_length);
+	void moveInHeadDirection();
+	void addBodySegment(Coordinates coord);
+	Coordinates deleteAndGetLastBodySegment();
+	Coordinates getBodySegment(int index);
 };
 
 class Score {
@@ -100,10 +100,10 @@ public:
 	Score() {
 		value = 0;
 	}
-	int get_value() {
+	int getValue() {
 		return value;
 	}
-	void set_value(int value) {
+	void setValue(int value) {
 		this->value = value;
 	}
 };
@@ -112,7 +112,7 @@ class Food : public Coordinates {
 public:
 	Food() = default;
 	Food(int x, int y) {
-		set_coordinates(x, y);
+		setCoordinates(x, y);
 	}
 };
 
@@ -121,24 +121,22 @@ private:
 	Score score;
 	Snake snake;
 	Food food;
-	std::pair<int, int> field_size;
+	std::pair<int, int> fieldSize;
 public:
-	Field(FIELD_SIZE field_size);
-	void start_game();
+	Field(FIELD_SIZE fieldSize);
+	void startGame();
 private:
-	void clean_input();
-	void display_field();
-	void clear_field();
-	void place_food_in_random_place();
-	bool is_food_eaten();
-	bool is_time_to_kill_snake();
-	void place_char(Coordinates coord, char chr);
+	void clearScreen();
+	void clearField();
+	void displayField();
+	void placeFoodRandomly();
+	bool isFoodEaten();
+	bool isSnakeKilled();
+	void placeCharacter(Coordinates coord, char chr);
 	void delay(int time);
-	void set_cursor_coordinates(Coordinates coordinates);
-	void set_cursor_coordinates(int x, int y);
-	void place_snake();
-	void change_snake_position();
-	void update_score();
-	void kill_snake();
-	void the_end();
+	void placeSnake();
+	void displaySnake();
+	void updateScore();
+	void killSnake();
+	void theEnd();
 };
