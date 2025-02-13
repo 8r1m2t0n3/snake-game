@@ -88,7 +88,6 @@ void Snake::addBodySegment(Coordinates coord) {
 Coordinates Snake::deleteAndGetLastBodySegment() {
 	Coordinates coord = body.front();
 	body.pop();
-	length--;
 	return coord;
 }
 
