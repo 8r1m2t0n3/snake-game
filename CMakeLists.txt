@@ -7,8 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 include_directories(include)
 
-set(CMAKE_BUILD_TYPE Debug)
-
 set(SOURCES
     main.cpp
     src/coordinates.cpp
