@@ -1,45 +1,30 @@
-#include "Snake.h"
+#include "game.h"
 
-int _MAX_LEN;
-Field _field(SMALL);
-Snake _snake;
-Food _food;
-Score _score;
-
-void test() {
-	_field.build_Field();
-	while (1) {
-		//_field.deley(50);
-		_food = _field.replace_food();
-		_field.place_food(_food);
+int main(int argc, char *argv[]) {
+	if (argc > 2) {
+		std::cout << "Wrong number of arguments" << std::endl;
+		return -1;
 	}
-}
 
-int main() {
-	//test();
+	FIELD_SIZE fieldSize = NORMAL;
 
-
-	_field.build_Field();
-	_field.place_snake(_snake);
-	while (1) {
-		_field.place_food(_food);
-		_snake.move();
-		if (_snake.is_time_to_die()) {
-			_field.kill_snake(_snake);
-			_field.the_end();
-			return 0;
+	if (argc == 2) {
+		switch(std::stoi(argv[1])) {
+			case 0:
+				fieldSize = SMALL;
+				break;
+			case 1:
+				fieldSize = NORMAL;
+				break;
+			case 2:
+				fieldSize = LARGE;
+				break;
+			default:
+				std::cout << "Wrond argument" << std::endl;
+				return -1;
 		}
-		_field.change_snake_position(_snake);
-		_field.deley(150);
-		if (_food.is_eaten())
-			_food = _field.replace_food();
-		_field.update_score();
-	}
+	} 
+	Game game(fieldSize);
+	game.start();
+	return 0;
 }
-
-/* ############### BUGS ############### */
-
-// food appears inside the snake
-// sometimes before death head just disappears
-
-/* #################################### */

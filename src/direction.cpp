@@ -1,9 +1,9 @@
-#include "snake.h"
+#include "game.h"
 
-void Direction::set_direction(int dir) {
+void Direction::setDirection(DIRECTION dir) {
 	direction = dir;
 }
 
-int Direction::get_direction() {
+int Direction::getDirection() {
 	return direction;
 }

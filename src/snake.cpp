@@ -1,108 +1,98 @@
-#include "snake.h"
-
-extern int _MAX_LEN;
-extern Field _field;
-extern int _X, _Y;
+#include "game.h"
 
 Snake::Snake() {
-	_MAX_LEN = DEFAULT_LEN - 1;
-	length = 0;
-	head.set_coordinates(_X / 2 + _X / 2 % 2, _Y / 2 + _Y / 2 % 2);
-	head.set_direction(RIGHT);
+	actualLength = DEFAULT_LEN - 1;
+	head.setDirection(RIGHT);
+}
+
+void Snake::setHeadCoordinates(int x, int y) {
+	head.setCoordinates(x, y);
+}
+
+void Snake::setHeadDirection(DIRECTION dir) {
+	head.setDirection(dir);
 }
 
 Head::Head() {
-	set_coordinates(0, 0);
-	set_direction(RIGHT);
+	setDirection(RIGHT);
 }
 
 Head::Head(int x, int y) {
-	set_coordinates(x, y);
-	set_direction(RIGHT);
+	setCoordinates(x, y);
+	setDirection(RIGHT);
 }
 
-void Head::check_diraction() {
-	int dir = get_direction();
+void Head::checkDirection() {
+	int dir = getDirection();
+	int pressedKey = GetPressedKey();
 
-	if (GetAsyncKeyState(UP) && dir != DOWN) {
-		set_direction(UP);
+	if (pressedKey == RIGHT && dir != LEFT) {
+		setDirection(RIGHT);
 	}
-	else if (GetAsyncKeyState(DOWN) && dir != UP) {
-		set_direction(DOWN);
+	else if (pressedKey == UP && dir != DOWN) {
+		setDirection(UP);
 	}
-	else if (GetAsyncKeyState(LEFT) && dir != RIGHT) {
-		set_direction(LEFT);
+	else if (pressedKey == DOWN && dir != UP) {
+		setDirection(DOWN);
 	}
-	else if (GetAsyncKeyState(RIGHT) && dir != LEFT) {
-		set_direction(RIGHT);
+	else if (pressedKey == LEFT && dir != RIGHT) {
+		setDirection(LEFT);
 	}
 }
 
-Coordinates Snake::get_head_coordinates() {
-	return head.get_coordinates();
+Coordinates Snake::getHeadCoordinates() {
+	return head.getCoordinates();
 }
 
-void Snake::move() {
-	head.check_diraction();
-	int dir = head.get_direction();
+void Snake::moveInHeadDirection() {
+	head.checkDirection();
 
-	switch (dir) {
+	switch (head.getDirection()) {
 	case UP:
-		head.set_coordinates(head.get_x(), head.get_y() - 1);
+		head.setCoordinates(head.getX(), head.getY() - 1);
 		break;
 	case DOWN:
-		head.set_coordinates(head.get_x(), head.get_y() + 1);
+		head.setCoordinates(head.getX(), head.getY() + 1);
 		break;
 	case LEFT:
-		head.set_coordinates(head.get_x() - 2, head.get_y());
+		head.setCoordinates(head.getX() - 2, head.getY());
 		break;
 	case RIGHT:
-		head.set_coordinates(head.get_x() + 2, head.get_y());
+		head.setCoordinates(head.getX() + 2, head.getY());
 		break;
 	default:
 		return;
 	}
-	length++;
 }
 
-bool Snake::is_time_to_die() {
-	int head_x = head.get_x();
-	int head_y = head.get_y();
-	if (head_x < 3 || head_x > _X - 4 || head_y < 4 || head_y > _Y - 3)
-		return 1;
-	for (int i = 0; i < get_length(); i++) {
-		Coordinates coord = get_index_body_segment(i);
-		if (coord.get_x() == head.get_x() && coord.get_y() == head.get_y()) {
-			return 1;
-		}
-	}
-	return 0;
+int Snake::getHeadDiraction() {
+	return head.getDirection();
 }
 
-int Snake::get_head_diraction() {
-	return head.get_direction();
-}
-
-int Snake::get_length() {
+int Snake::getDisplayedLength() {
 	return body.size();
 }
 
-void Snake::set_length(int length) {
-	this->length = length;
+int Snake::getActualLength() {
+	return actualLength;
 }
 
-void Snake::add_body_segment(Coordinates coord) {
+void Snake::setActualLength(int new_actual_length) {
+	actualLength = new_actual_length;
+}
+
+void Snake::addBodySegment(Coordinates coord) {
 	body.push(coord);
 }
 
-Coordinates Snake::get_and_del_last_body_segment() {
+Coordinates Snake::deleteAndGetLastBodySegment() {
 	Coordinates coord = body.front();
 	body.pop();
 	length--;
 	return coord;
 }
 
-Coordinates Snake::get_index_body_segment(int ind) {
+Coordinates Snake::getBodySegment(int ind) {
 	if (ind > body.size() || ind < 0) {
 		Coordinates coord(0, 0);
 		return coord;

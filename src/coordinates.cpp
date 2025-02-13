@@ -1,4 +1,4 @@
-#include "snake.h"
+#include "game.h"
 
 Coordinates::Coordinates() {
 	x = 0;
@@ -11,36 +11,36 @@ Coordinates::Coordinates(int x, int y) {
 }
 
 bool Coordinates::operator==(Coordinates coord) {
-	return x == coord.get_x() && y == coord.get_y();
+	return x == coord.getX() && y == coord.getY();
 }
 
-Coordinates Coordinates::get_coordinates() {
+Coordinates Coordinates::getCoordinates() {
 	Coordinates coord(x, y);
 	return coord;
 }
 
-int Coordinates::get_x() {
+int Coordinates::getX() {
 	return x;
 }
 
-int Coordinates::get_y() {
+int Coordinates::getY() {
 	return y;
 }
 
-void Coordinates::set_coordinates(Coordinates coord) {
-	x = coord.get_x();
-	y = coord.get_y();
+void Coordinates::setCoordinates(Coordinates coord) {
+	x = coord.getX();
+	y = coord.getY();
 }
 
-void Coordinates::set_coordinates(int x, int y) {
+void Coordinates::setCoordinates(int x, int y) {
 	this->x = x;
 	this->y = y;
 }
 
-void Coordinates::set_x(int val) {
+void Coordinates::setX(int val) {
 	x = val;
 }
 
-void Coordinates::set_y(int val) {
+void Coordinates::setY(int val) {
 	y = val;
 }
