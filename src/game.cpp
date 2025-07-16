@@ -183,8 +183,8 @@ Game::Game(FIELD_SIZE fieldSize) {
 			break;
 	}
 
-    this->window = Window(size);
-    this->score = Score();
+    	this->window = Window(size);
+    	this->score = Score();
 	this->snake = Snake();
 	this->food = Food();
 }
