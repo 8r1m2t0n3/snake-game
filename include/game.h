@@ -9,6 +9,7 @@
 /* -------- CHANGEABLE -------- */
 #define DEFAULT_LEN 4
 #define WEDGE_HEAD 1 // 0 or 1
+#define SNAKE_SPEED 200 // in milliseconds
 /* ---------------------------- */
 
 /* --------- CONSTANTS --------- */

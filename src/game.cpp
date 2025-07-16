@@ -209,7 +209,7 @@ void Game::start() {
 			return;
 		}
 		displaySnake();
-		this->window.delay(150);
+		this->window.delay(SNAKE_SPEED);
 		if (isFoodEaten())
 			placeFoodRandomly();
 		displayScore();
